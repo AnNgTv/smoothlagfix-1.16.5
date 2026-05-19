@@ -10,14 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BrainMixin {
     private int tickCount = 0;
 
-    // Optimization: Throttling Brain (AI) ticking to reduce CPU usage
-    // Most AI tasks don't need to run every single tick
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void onTick(CallbackInfo ci) {
+        if (!me.gemini.smoothlagfix.SmoothLagFix.CONFIG.enableBrainThrottling) return;
+
         tickCount++;
         if (tickCount % 2 != 0) {
-            // Skip every 2nd tick for non-critical AI logic
-            // In a full implementation, we would check if the entity is hostile or near a player
             ci.cancel();
         }
     }

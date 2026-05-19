@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "me.gemini.smoothlagfix.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "EntityMixin",
+    "FastMathMixin",
+    "BrainMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

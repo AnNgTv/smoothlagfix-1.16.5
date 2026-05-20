@@ -1,0 +1,11 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/resources/*.jar
+out/
+.DS_Store
+*.swp
+*.iml
+.idea
+.vscode
+.nb-gradle

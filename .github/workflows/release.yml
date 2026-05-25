@@ -16,18 +16,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Set up JDK 17 (Build Environment)
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java }}
+          java-version: '17'
           distribution: 'temurin'
-          # Bỏ cache mặc định để tránh lỗi khi repo chưa có file Gradle/Maven
 
       # 1. Build với Gradle
       - name: Build with Gradle
         if: hashFiles('**/build.gradle*', '**/build.gradle.kts') != ''
         run: |
           chmod +x ./gradlew
+          # Truyền target Java version vào build nếu cần, hoặc để build.gradle tự xử lý
           ./gradlew build
 
       # 2. Build với Maven
@@ -41,12 +41,10 @@ jobs:
         run: |
           mkdir -p final_artifacts
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
-          JAVA_VER=${{ matrix.java }}
           
           # Tìm file .jar
-          FOUND_JAR=false
           find . -name "*.jar" -not -path "*/.*" -not -name "*-sources.jar" -not -name "*-javadoc.jar" -not -name "*-dev.jar" -type f | while read file; do
-            NEW_NAME="${REPO_NAME}-Java${JAVA_VER}.jar"
+            NEW_NAME="${REPO_NAME}.jar"
             cp "$file" "final_artifacts/$NEW_NAME"
             echo "FOUND_JAR=true" >> $GITHUB_ENV
           done
@@ -57,6 +55,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') && env.FOUND_JAR == 'true'
         with:
           files: final_artifacts/*.jar
-          body: "Tự động build cho Java ${{ matrix.java }}. Tên file: ${REPO_NAME}-Java${{ matrix.java }}.jar"
+          body: "Tự động build bản SmoothLagFix mới nhất."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

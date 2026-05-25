@@ -6,6 +6,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
+import net.minecraft.network.MessageType;
+import net.minecraft.util.Util;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LagUtils {
@@ -27,7 +29,8 @@ public class LagUtils {
         if (count > 0) {
             server.getPlayerManager().broadcastChatMessage(
                 new LiteralText("§6[SmoothLagFix] §eCleared §b" + count + " §eitems from the ground!"),
-                false
+                MessageType.SYSTEM,
+                Util.NIL_UUID
             );
         }
     }
